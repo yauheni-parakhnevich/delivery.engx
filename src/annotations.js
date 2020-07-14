@@ -1,6 +1,7 @@
 const {executeRequest, getUnitHeader, executePost} = require('./utility/delivery')
 const xlsx = require('xlsx')
 const dateFormat = require('dateformat')
+const nodemailer = require('nodemailer')
 
 const records = []
 
@@ -15,6 +16,37 @@ const startFrom = {
 //     name: 'I&A', 
 //     type: 'PROGRAM'
 // }
+
+const sendMail = (fileName) => {
+    var message = {
+        from: process.env.mailFrom,
+        to: process.env.mailTo,
+        subject: "Regular delivery.epam.com report",
+        html: "<p>Please find the report attached</p>",
+        attachments: [{
+            path: fileName
+        }]
+      };
+    
+    var transporter = nodemailer.createTransport({
+        host: process.env.mailHost, 
+        port: 25,
+        secure: false, 
+        auth: {
+            user: process.env.mailUser,
+            pass: process.env.mailPassword
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+    })
+    
+    transporter.sendMail(message, function(err) {
+        if (err) {
+          console.log(err)
+        }
+      });
+}
 
 const extractValue = (node, config) => {
     const card = node.cards.find(card => card.element.configuration.name == config)
@@ -105,5 +137,8 @@ const processChildren = async (unitId) => {
     xlsx.utils.book_append_sheet(wb, ws, 'data');
 
     const now = new Date()
-    xlsx.writeFile(wb, 'Annotations_' + dateFormat(now, 'dd-mm-yy') + '.xlsx');
+    const fileName = 'Annotations_' + dateFormat(now, 'dd-mm-yy') + '.xlsx'
+    xlsx.writeFile(wb, fileName);
+
+    sendMail(fileName)
 })()
