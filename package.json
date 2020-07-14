@@ -17,7 +17,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node -r dotenv/config app",
     "annotations": "node -r dotenv/config src/annotations",
-    "createTags": "node -r dotenv/config src/createTags"
+    "createTags": "node -r dotenv/config src/createTags",
+    "fillAnnotations": "node -r dotenv/config src/fillAnnotations"
   },
   "author": "Yauheni Parakhnevich",
   "license": "ISC"

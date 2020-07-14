@@ -7,12 +7,35 @@ const userPassword = process.env.password
 
 let auth = {}
 
+const executePut = async (url, body) => {
+    if (!auth.jwtToken) {
+        await authenticate()
+    }
+
+    const result = await request.put('https://delivery.epam.com' + url, {
+        auth: {
+            bearer: auth.jwtToken
+        },
+        headers: {
+            'lum-api-token': auth.accessToken
+        },
+        body,
+        json: true
+    })   
+
+    return result
+}
+
 const executePost = async (url, body) => {
     if (!auth.jwtToken) {
         await authenticate()
     }
 
-    const result = await request.post('https://delivery.epam.com' + url, {
+    if (url && !url.startsWith('http')) {
+        url += 'https://delivery.epam.com'
+    }
+
+    const result = await request.post(url, {
         auth: {
             bearer: auth.jwtToken
         },
@@ -93,5 +116,6 @@ const getUnitHeader = async (id) => {
 module.exports = {
     executeRequest,
     getUnitHeader,
-    executePost
+    executePost,
+    executePut
 }
