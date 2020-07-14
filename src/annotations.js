@@ -1,5 +1,6 @@
 const {executeRequest, getUnitHeader, executePost} = require('./utility/delivery')
 const xlsx = require('xlsx')
+const dateFormat = require('dateformat')
 
 const records = []
 
@@ -64,7 +65,7 @@ const processUnit = async (elt) => {
     if (teamDetails && teamDetails.length > 0) {
         if (teamDetails[0].keyStaff) {
             const manager = teamDetails[0].keyStaff.find((item) => {
-                return item.role == 'Delivery Manager' || item.role == 'Stream Manager'
+                return item.role == 'Delivery Manager' || item.role == 'Stream Manager' || item.role == 'Program Manager'
             })
 
             if (manager) {
@@ -102,5 +103,7 @@ const processChildren = async (unitId) => {
     const wb = xlsx.utils.book_new()
     const ws = xlsx.utils.json_to_sheet(records)
     xlsx.utils.book_append_sheet(wb, ws, 'data');
-    xlsx.writeFile(wb, 'Annotations.xlsx');
+
+    const now = new Date()
+    xlsx.writeFile(wb, 'Annotations_' + dateFormat(now, 'dd-mm-yy') + '.xlsx');
 })()
