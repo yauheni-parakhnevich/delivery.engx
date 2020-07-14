@@ -32,7 +32,7 @@ const executePost = async (url, body) => {
     }
 
     if (url && !url.startsWith('http')) {
-        url += 'https://delivery.epam.com'
+        url = 'https://delivery.epam.com' + url
     }
 
     const result = await request.post(url, {
