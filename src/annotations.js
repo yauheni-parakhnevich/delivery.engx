@@ -98,12 +98,12 @@ const processChildren = async (unitId) => {
 }
 
 ;(async () => {
-    await processUnit(startFrom)
+    // await processUnit(startFrom)
 
-    const wb = xlsx.utils.book_new()
-    const ws = xlsx.utils.json_to_sheet(records)
-    xlsx.utils.book_append_sheet(wb, ws, 'data');
+    // const wb = xlsx.utils.book_new()
+    // const ws = xlsx.utils.json_to_sheet(records)
+    // xlsx.utils.book_append_sheet(wb, ws, 'data');
 
-    const now = new Date()
-    xlsx.writeFile(wb, 'Annotations_' + dateFormat(now, 'dd-mm-yy') + '.xlsx');
+    // const now = new Date()
+    // xlsx.writeFile(wb, 'Annotations_' + dateFormat(now, 'dd-mm-yy') + '.xlsx');
 })()

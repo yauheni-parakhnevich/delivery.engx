@@ -35,19 +35,25 @@ const executePost = async (url, body) => {
         url = 'https://delivery.epam.com' + url
     }
 
-    const result = await request.post(url, {
-        auth: {
-            bearer: auth.jwtToken
-        },
-        headers: {
-            'lum-api-token': auth.accessToken
-        },
-        body,
-        json: true
-    })   
+    try {
+        const result = await request.post(url, {
+            auth: {
+                bearer: auth.jwtToken
+            },
+            headers: {
+                'lum-api-token': auth.accessToken
+            },
+            body,
+            json: true
+        })   
 
-    return result          
+        return result          
 
+    } catch (e) {
+        console.log(e)
+
+        return undefined
+    }
 }
 
 const executeRequest = async (url, baseUrl = 'https://delivery.epam.com') => {

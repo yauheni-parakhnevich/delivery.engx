@@ -12,6 +12,22 @@ const startFrom = {
     type: 'PROGRAM'
 }
 
+const createAnnotation = async (unitId, tagsSection, tagName) => {
+    const card = tagsSection.cards.find(card => card.element.configuration.name == tagName)
+    if (!card) {
+        await executePost('/v1/' + unitId + '/views/cards', {
+            "containerId": tagsSection.id,
+            "element": {
+                "configuration": {
+                    "name": tagName
+                },
+                "type": "ANNOTATION"
+            }
+        })    
+    }        
+
+}
+
 const processUnit = async (elt) => {
     console.log(elt.unitId, elt.name)
 
@@ -20,60 +36,18 @@ const processUnit = async (elt) => {
     const summaryId = (await getUnitHeader(elt.unitId)).summaryId
 
     const details = await executeRequest('/v1/' + elt.unitId + '/views/summary')
-    const reporting = details.sections.find(section => section.title == 'Tags')
+    let reporting = details.sections.find(section => section.title == 'Tags')
 
-    if(reporting) {
-        // record.perfLink = extractValue(reporting, 'PERF LINK')
-        // record.squadType = extractValue(reporting, 'SQUAD TYPE')
-
-        let card = reporting.cards.find(card => card.element.configuration.name == 'PERF LINK')
-        if (!card) {
-            await executePost('/v1/' + elt.unitId + '/views/cards', {
-                "containerId": reporting.id,
-                "element": {
-                    "configuration": {
-                        "name": "PERF LINK"
-                    },
-                    "type": "ANNOTATION"
-                }
-            })    
-        }        
-
-        card = reporting.cards.find(card => card.element.configuration.name == 'SQUAD TYPE')
-        if (!card) {
-            await executePost('/v1/' + elt.unitId + '/views/cards', {
-                "containerId": reporting.id,
-                "element": {
-                    "configuration": {
-                        "name": "SQUAD TYPE"
-                    },
-                    "type": "ANNOTATION"
-                }
-            })    
-        }        
-
-        card = reporting.cards.find(card => card.element.configuration.name == 'SQUAD NAME')
-        if (!card) {
-            await executePost('/v1/' + elt.unitId + '/views/cards', {
-                "containerId": reporting.id,
-                "element": {
-                    "configuration": {
-                        "name": "SQUAD NAME"
-                    },
-                    "type": "ANNOTATION"
-                }
-            })    
-        }        
-
-    } else {
-        // Create 'Tags' and 'PERF LINK'/'SQUAD TYPE'
-        await executePost('/v1/' + elt.unitId + '/views/sections', {
+    if(!reporting) {
+        reporting = await executePost('/v1/' + elt.unitId + '/views/sections', {
             "containerId": summaryId,
             "title": "Tags"
         })
-
-        // TODO: create cards
     }
+
+    createAnnotation(elt.unitId, reporting, 'PERF LINK')
+    createAnnotation(elt.unitId, reporting, 'SQUAD TYPE')
+    createAnnotation(elt.unitId, reporting, 'SQUAD NAME')
 
     await processChildren(elt.unitId)
 }
