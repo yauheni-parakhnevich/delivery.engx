@@ -2,7 +2,7 @@ const request = require('request-promise-native')
 
 const clientId = process.env.clientId
 const clientSecret = process.env.clientSecret
-const userName = process.env.user
+const userName = process.env.apiUser
 const userPassword = process.env.password
 
 let auth = {}
@@ -116,7 +116,9 @@ const getUnitHeader = async (id) => {
 
     const summaryId = details.pages.find(page => page.pageType == 'summary').id
 
-    return {path: pathString, externalId, summaryId}
+    const originalName = details.breadcrumbs.originalName
+
+    return {path: pathString, externalId, summaryId, originalName}
 }
 
 module.exports = {

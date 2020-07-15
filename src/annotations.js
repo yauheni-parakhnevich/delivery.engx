@@ -79,6 +79,7 @@ const processUnit = async (elt) => {
 
     const unitHeader = await getUnitHeader(elt.unitId)
     record.path = unitHeader.path
+    record.originalName = unitHeader.originalName
 
     const details = await executeRequest('/v1/' + elt.unitId + '/views/summary')
     const reporting = details.sections.find(section => section.title == 'Tags')
