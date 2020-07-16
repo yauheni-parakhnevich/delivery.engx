@@ -5,13 +5,13 @@ const xlsx = require('xlsx')
 
 const clientId = process.env.clientId
 const clientSecret = process.env.clientSecret
-const userName = process.env.user
+const userName = process.env.apiUser
 const userPassword = process.env.password
 
 const records = []
 
 //const startFrom = '40680' // I & A
-const startFrom = '22835'// Refinitiv
+const startFrom = '126244'// PE
 
 const questions = [
     {'id': 'Q1' , 'title': 'Do you track requirements (user stories) as formal task to be done using task management system?'},

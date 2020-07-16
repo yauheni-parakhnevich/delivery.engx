@@ -17,7 +17,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node -r dotenv/config app",
+    "engx": "node -r dotenv/config src/engx",
     "annotations": "node -r dotenv/config src/annotations",
     "createTags": "node -r dotenv/config src/createTags",
     "fillAnnotations": "node -r dotenv/config src/fillAnnotations",
