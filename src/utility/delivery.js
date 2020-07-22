@@ -101,7 +101,6 @@ const authenticate = async () => {
 
 const getUnitHeader = async (id) => {
     const details = await executeRequest('/v1/' + id + '/navigation/unitHeader')
-
     const path = details.breadcrumbs.path
 
     let pathString = ''
@@ -118,7 +117,9 @@ const getUnitHeader = async (id) => {
 
     const originalName = details.breadcrumbs.originalName
 
-    return {path: pathString, externalId, summaryId, originalName}
+    const type = details.currentUnit.type
+
+    return {path: pathString, externalId, summaryId, originalName, type}
 }
 
 module.exports = {
