@@ -72,6 +72,38 @@ const processUnit = async (elt) => {
         record.scopeOfWorks = getArrayValues(sow)
         record.deliveryApproaches = getArrayValues(projectDetails.deliveryApproaches)
         record.complianceRequirements = getArrayValues(projectDetails.complianceRequirements)
+
+        // Risks
+        const risks = await executeRequest(`/v1/${elt.unitId}/risks?limit=10&offset=0&saved=true`)
+
+        if (risks.page && risks.page.length > 0) {
+            const riskString = []
+
+            for(i = 0; i < risks.page.length; i++) {
+                const risk = risks.page[i]
+                const str = `${risk.summary} [${risk.source}, ${risk.probability}, ${risk.state}]`
+
+                riskString.push(str)
+            }
+
+            record.risks = riskString.join('\n')
+        }
+
+        // Issues
+        const issues = await executeRequest(`/v1/${elt.unitId}/issues?limit=10&offset=0&saved=true`)
+
+        if (issues.page && issues.page.length > 0) {
+            const issueString = []
+
+            for(i = 0; i < issues.page.length; i++) {
+                const issue = issues.page[i]
+                const str = `${issue.summary} [${issue.priority}, ${issue.state}]`
+
+                issueString.push(str)
+            }
+
+            record.issues = issueString.join('\n')
+        }
     }
     console.log(record.id, record.name, record.type)
 
