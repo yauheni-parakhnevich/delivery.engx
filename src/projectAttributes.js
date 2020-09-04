@@ -5,9 +5,9 @@ const dateFormat = require('dateformat')
 const records = []
 
 const startFrom = {
-    unitId: 126244, 
-    name: 'Product Engineering', 
-    type: 'PROGRAM'
+    unitId: 22835, 
+    name: 'Refinitiv', 
+    type: 'CUSTOMER'
 }
 
 let scopeOfWork = []
