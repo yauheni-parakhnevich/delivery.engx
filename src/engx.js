@@ -13,6 +13,8 @@ const records = []
 //const startFrom = '40680' // I & A
 const startFrom = '126244'// PE
 
+//const startFrom = '40413' // debug
+
 const questions = [
     {'id': 'Q1' , 'title': 'Do you track requirements (user stories) as formal task to be done using task management system?'},
     {'id': 'Q2' , 'title': 'Do you have documented and followed Definition of Done for user stories?'},
@@ -119,7 +121,6 @@ const processSurveyResult = (record, auth, callback) => {
         } else {
             try{
                 surveyResult.sections.forEach(section => {
-
                     section.questions.forEach(question => {
                         const answer = _.where(question.answer, {checked: true})[0]
 
@@ -127,7 +128,11 @@ const processSurveyResult = (record, auth, callback) => {
 //                        const questionId = _.where(questions, {title: question.title})[0].id
 //                        record[questionId] = answer.title
 
-                        record[question.title] = answer.title
+                        if (answer.title) {
+                            record[question.title] = answer.title
+                        } else {
+                            record[question.title] = _.where(question.content, {id: answer.id})[0].title
+                        }
 
                     })
                 })
