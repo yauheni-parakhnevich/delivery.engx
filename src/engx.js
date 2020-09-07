@@ -179,7 +179,9 @@ const processSingleProject = (record, auth, callback) => {
 
 }
 
-const processChildren = (unitId, auth, masterCallback) => {
+const processChildren = (unit, auth, masterCallback) => {
+
+    const unitId = unit.id
 
     executeRequest('https://delivery.epam.com/v1/' + unitId + '/treeview', auth, (err, result) => {
         if(err) {
@@ -193,14 +195,14 @@ const processChildren = (unitId, auth, masterCallback) => {
 
         async.each(children, (elt, callback) =>{
 
-            const record = {projectId: elt.unitId, projectName: elt.name, parentId: unitId, type: elt.type}
+            const record = {projectId: elt.unitId, projectName: elt.name, parentId: unitId, path:unit.name, type: elt.type}
 
             async.parallel([
                 (callback) => processSingleProject(record, auth, (err, result) => {
                     if(result.projectId) records.push(result)
                     callback(null, 1)
                 }),
-                (callback) => processChildren(record.projectId, auth, (err, result) => {
+                (callback) => processChildren({id: record.projectId, name: `${unit.name}/${record.projectName}`}, auth, (err, result) => {
                     if(result.projectId) records.push(result)
                     callback(null, 2)
                 })
@@ -231,10 +233,23 @@ getAccessToken(clientId, clientSecret, (err, accessToken) => {
         
         const auth = {accessToken, jwtToken}
 
-        processChildren(startFrom, auth, (err, result) => {
+        processChildren({id: startFrom, name: 'PE'}, auth, (err, result) => {
             if(err) {
                 return console.log(err)
             }
+
+            // Post-processing
+            records.forEach(record => {
+                const arr = record.path.split('/')
+
+                if(arr.length > 1) {
+                    record.level1 = arr[1]
+                }
+
+                if(arr.length > 2) {
+                    record.level2 = arr[2]
+                }
+            })
 
             const wb = xlsx.utils.book_new()
             const ws = xlsx.utils.json_to_sheet(records)
