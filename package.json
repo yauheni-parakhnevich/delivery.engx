@@ -21,7 +21,8 @@
     "annotations": "node -r dotenv/config src/annotations",
     "createTags": "node -r dotenv/config src/createTags",
     "fillAnnotations": "node -r dotenv/config src/fillAnnotations",
-    "projectAttributes": "node -r dotenv/config src/projectAttributes"
+    "projectAttributes": "node -r dotenv/config src/projectAttributes",
+    "createStreams": "node -r dotenv/config src/createStreams"
   },
   "author": "Yauheni Parakhnevich",
   "license": "ISC"
