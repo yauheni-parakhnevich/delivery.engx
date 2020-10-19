@@ -159,7 +159,10 @@ const processSingleProject = (record, auth, callback) => {
             _.where(summary.sections, {'title': 'EngX Certification Lite'}),
             _.where(summary.sections, {'title': 'EngX Certification'}))[0]
         if(engX) {
-            const survey = _.where(engX.cards, {'title': 'EngX Certification Lite'})[0]
+            let survey = _.where(engX.cards, {'title': 'EngX Certification Lite'})[0]
+            if(!survey) {
+                survey = _.where(engX.cards, {'title': 'EngX Certification Lite (auto)'})[0]
+            }
             const surveyId = survey.element.data.surveyEntityId
 
             if(survey.element.data.results.score) { // survey created, no results
